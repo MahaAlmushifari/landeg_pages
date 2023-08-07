@@ -110,6 +110,19 @@ const scrolling = () => {
 
 scrolling();
 
+function areActive(sectionElement){
+  for(const link of listOfLinks){
+    const linkValue = link.getAttribute('value');
+    const sectionElementID = sectionElement.getAttribute('id');
+    
+    if( linkValue === sectionElementID){
+      link.classList.add('activeItem');
+    }
+    else{
+      link.classList.remove('activeItem');
+    }
+  };
+};
 /**
  * End Main Functions
  * Begin Events
