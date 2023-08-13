@@ -13,103 +13,50 @@
  * 
 */
 
-/**
- * Define Global Variables
- * 
+/*
+  1 - get the Navigation Bar by ID " navBar " .
+  2 - create unordered list ,and set an ID " navList " .
+  3 - add the unordered list to Navigation Bar.
 */
-// navigation global var
-const navigation = document.getElementById('navbar__list');
-// sections global var
-const sections = document.querySelectorAll('section');
+const navBar = document.querySelector('#navBar');
+const uList = document.createElement('ul'); 
+uList.setAttribute('id','navList');
+navBar.appendChild(uList);
 
-/**
- * End Global Variables
- * Start Helper Functions
- * 
+
+/*
+  1 - get the unordered list By ID " navList " .
+  2 - create for loop,which will create list of Items and set Class,value and text for each .
+  3 - add the item to unordered list.
 */
+const uListSelected = document.querySelector('#navList');
 
+for (let i=1; i<=4;i++){
+  const listItm = document.createElement('li'); 
+  listItm.className='listItem';
+  listItm.setAttribute('value',`sec${i}`);
+  listItm.innerText=`Section ${i}`;
+  uListSelected.appendChild(listItm);
+};
 
-
-/**
- * End Helper Functions
- * Begin Main Functions
- * 
+/*
+  1 - get all elements which have className "listItem", which are Navigation bar items.
+  2 - add Event Listener('click') for all items,once item clicked it will get the value and a
+      assign it to the section then scroll to that section.
 */
+const listOfLinks = document.querySelectorAll('.listItem');
 
-// build the nav
-
-const navBuilder = () => {
-
-    let navUI = '';
-    // looping over all sections
-    sections.forEach(section => {
-
-        const sectionID = section.id;
-        const sectionDataNav = section.dataset.nav;
-
-        navUI += `<li><a class="menu__link" href="#${sectionID}">${sectionDataNav}</a></li>`;
-
-    });
-    // append all elements to the navigation
-    navigation.innerHTML = navUI;
-
-
+for (const link of listOfLinks){
+  link.addEventListener('click',function(){
+    let theValue = link.getAttribute('value');
+    let theSection = document.getElementById(theValue);
+    theSection.scrollIntoView({behavior:'smooth'});
+  });
 };
 
-navBuilder();
-
-// Add class 'active' to section when near top of viewport
-
-// getting the largest value that's less or equal to the number
-const offset = (section) => {
-    return Math.floor(section.getBoundingClientRect().top);
-};
-
-// remove the active class
-const removeActive = (section) => {
-    section.classList.remove('your-active-class');
-    section.style.cssText = "background-color: linear-gradient(0deg, rgba(255,255,255,.1) 0%, rgba(255,255,255,.2) 100%)";
-};
-// adding the active class
-const addActive = (conditional, section) => {
-    if(conditional){
-        section.classList.add('your-active-class');
-        section.style.cssText = "background-color: yellow;";
-    };
-};
-
-//implementating the actual function
-
-const sectionActivation = () => {
-    sections.forEach(section => {
-        const elementOffset = offset(section);
-
-        inviewport = () => elementOffset < 150 && elementOffset >= -150;
-
-        removeActive(section);
-        addActive(inviewport(),section);
-    });
-};
-
-window.addEventListener('scroll' ,sectionActivation);
-
-// Scroll to anchor ID using scrollTO event
-
-const scrolling = () => {
-
-    const links = document.querySelectorAll('.navbar__menu a');
-    links.forEach(link => {
-        link.addEventListener('click', () => {
-            for(i = 0 ; i<sections ; i++){
-                sections[i].addEventListener("click",sectionScroll(link));
-            }
-        });
-    });
-
-};
-
-scrolling();
-
+/*
+  1 - this function used to follow which Item is active in the viewport by passing the section as argument .
+*/
 function areActive(sectionElement){
   for(const link of listOfLinks){
     const linkValue = link.getAttribute('value');
@@ -123,16 +70,24 @@ function areActive(sectionElement){
     }
   };
 };
-/**
- * End Main Functions
- * Begin Events
- * 
+
+
+
+/*
+  1 - get all elements which have className "section", which are the 4 sections.
+  2 - add Event Listener('scroll') to detect  which section is appear in the viewport.
+  3 - if the section in the viewport ,then pass the section to function to highlight which item in navigation bar is active. 
 */
 
-// Build menu 
+const listOfSections = document.querySelectorAll('.section');
 
-// Scroll to section on link click
+function activeListItem(){
+  for (const theSection of listOfSections) {
+    const rect = theSection.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      areActive(theSection);
+    }
+  };
+};
 
-// Set sections as active
-
-
+document.addEventListener('scroll',activeListItem);
